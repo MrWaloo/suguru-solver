@@ -1,20 +1,24 @@
 # suguru-solver
 
-Example of grid definition:
-```python
-from grid import Grid
-# Novice / 61
-d = {
-  0: [(1, 1, 0), (2, 1, 0), (3, 1, 0)],
-	1: [(1, 2, 2), (2, 2, 0), (2, 3, 4), (3, 2, 0), (3, 3, 0)],
-	2: [(1, 3, 3), (1, 4, 0), (2, 4, 0)],
-	3: [(3, 4, 0), (4, 1, 0), (4, 2, 5), (4, 3, 0), (4, 4, 2), (5, 4, 6)],
-	4: [(5, 1, 1), (5, 2, 0)],
-	5: [(5, 3, 0)]
-}
-```
+## What is this?
 
-The grid looks like this:
+This project aims to solve Suguru puzzles (also known as Tectonic).
+
+To define a puzzle, the following vocabulary is used:
+- grid: Represents the entire puzzle board.
+- form: Each grid is divided into different shapes (cages) containing one or more cells.
+- cell: An individual square within the grid.
+
+### Grid Definition
+There are two ways to define a grid:
+- Defining the forms: Explicitly listing each shape and its constituent cells.
+- Pseudo-graphical definition: Defining the grid layout using a visual-like text representation.
+
+In both cases, a cell is defined by its coordinates and its initial content.
+
+## Example of grid definition:
+
+The sample grid looks like this:
 <pre>
        col  1   2   3   4
 row       _________________
@@ -25,6 +29,27 @@ row       _________________
  5        |_1_____|___|_6_|
 </pre>
 
+### First way definition:
+```python
+from grid import Grid
+# Novice / 61
+d = {
+	0: [(1, 1, 0), (2, 1, 0), (3, 1, 0)],
+	1: [(1, 2, 2), (2, 2, 0), (2, 3, 4), (3, 2, 0), (3, 3, 0)],
+	2: [(1, 3, 3), (1, 4, 0), (2, 4, 0)],
+	3: [(3, 4, 0), (4, 1, 0), (4, 2, 5), (4, 3, 0), (4, 4, 2), (5, 4, 6)],
+	4: [(5, 1, 1), (5, 2, 0)],
+	5: [(5, 3, 0)]
+}
+```
+
+The grid is defined as a dict:
+- the key is the form name or index,
+- the value is a tuple of 3 values:
+  - the 2 first are the cell coordinate (row, column),
+  - the last is the value: 0 or None if empty
+
+### Second way definition:
 ```python
 d = [
 	[{1: 0}, {2: 2}, {3: 3}, {3: 0}],
@@ -33,10 +58,18 @@ d = [
 	[{4: 0}, {4: 5}, {4: 0}, {4: 2}],
 	[{5: 1}, {5: 0}, {6: 0}, {4: 6}]
 ]
+```
 
+The grid is defined as a 2-dimentional list to represent the grid. Every cell in this definition is represented with a dict:
+- the key is the form index or name
+- the value is the cell value, 0 or None if empty
+
+## Other grids
+
+```python
 # Occasionnel / 130
 d = {
-  0: [(1, 1, 0), (1, 2, 0), (2, 1, 4), (2, 2, 0), (2, 3, 0)],
+	0: [(1, 1, 0), (1, 2, 0), (2, 1, 4), (2, 2, 0), (2, 3, 0)],
 	1: [(1, 3, 0), (1, 4, 0), (1, 5, 4), (2, 4, 1), (2, 5, 0)],
 	2: [(3, 1, 0), (3, 2, 0), (3, 3, 0), (3, 4, 0), (3, 5, 0)],
 	3: [(4, 1, 0), (4, 2, 0), (4, 3, 0), (5, 1, 1), (5, 2, 0)],
@@ -44,7 +77,7 @@ d = {
 }
 # Standard / 17
 d = {
-  0: [(1, 1, 0), (1, 2, 2), (1, 3, 0), (1, 4, 0), (2, 2, 0)],
+	0: [(1, 1, 0), (1, 2, 2), (1, 3, 0), (1, 4, 0), (2, 2, 0)],
 	1: [(1, 5, 0), (2, 3, 0), (2, 4, 0), (2, 5, 0), (3, 4, 0)],
 	2: [(2, 1, 0), (3, 1, 5), (3, 2, 0), (3, 3, 1), (4, 1, 0)],
 	3: [(4, 2, 0), (5, 1, 0), (5, 2, 0), (6, 1, 2), (6, 2, 0)],
@@ -53,7 +86,7 @@ d = {
 }
 # Expert / 12
 d = {
-  0: [(1, 1, 1), (1, 2, 0), (2, 1, 5), (2, 2, 2), (3, 1, 0), (3, 2, 0)],
+	0: [(1, 1, 1), (1, 2, 0), (2, 1, 5), (2, 2, 2), (3, 1, 0), (3, 2, 0)],
 	1: [(1, 3, 0), (1, 4, 0), (2, 3, 0), (2, 4, 0), (2, 5, 3), (3, 5, 0)],
 	2: [(1, 5, 0), (1, 6, 0), (1, 7, 5), (2, 6, 0), (2, 7, 0)],
 	3: [(3, 3, 0), (3, 4, 0)],
@@ -80,11 +113,17 @@ d= [
 	[{6: 0}, {7: 4}, {10: 0}, {10: 0}, {11: 0}, {12: 0}],
 	[{9: 0}, {7: 0}, {10: 0}, {11: 4}, {11: 0}, {11: 0}]
 ]
+```
 
+## Solving the grid
+
+```python
 grid = Grid(d)
 grid.solve()
+```
 
-
+Just for fun or debug:
+```python
 for c in grid.cells:
   print(f"({c.row}, {c.col}, {c.value}) -- {c.denied_values} ++ {c.allowed_values}")
 
