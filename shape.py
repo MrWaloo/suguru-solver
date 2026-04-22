@@ -1,7 +1,7 @@
 
 from cell import Cell
 
-class Form:
+class Shape:
 	def __init__(self, id: int):
 		self.id = id
 		self.cells: list[Cell] = []

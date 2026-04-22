@@ -1,10 +1,10 @@
 
 __all__ = [
     "Grid",
-    "Form",
+    "Shape",
     "Cell"
 ]
 
 from .grid import Grid
-from .form import Form
+from .shape import Shape
 from .cell import Cell
