@@ -96,7 +96,7 @@ class Grid:
 			for shape_id, shape_cells in f.items():
 				if set(shape_cells) <= set(neighbors):
 					cell.deny_value(allowed_value)
-					print("PLOP", cell.row, cell.col, allowed_value, shape_id)
+					#print("PLOP", cell.row, cell.col, allowed_value, shape_id)
 
 	def solve(self) -> bool:
 		stay = True
@@ -153,18 +153,18 @@ class Grid:
 					if len(cell.allowed_values) == 1:
 						self.set_cell_value(cell, cell.allowed_values.pop())
 						stay = True
-					# Check if allowed values changed
+					# Check if allowed or denied values changed
 					if cell.prev_allowed != cell.allowed_values or cell.prev_denied != cell.denied_values:
 						stay = True
 			
 			# Check if all cells are filled
 			solved = all(cell.value is not None for cell in self.cells)
 
-			for s in self.shapes:
-				print(f"**** shape id: {s.id}")
-				for c in s.cells:
-					print(f"({c.row}, {c.col}, {c.value}) -- {c.denied_values} ++ {c.allowed_values}")
-			print("---- Loop", loops, "Stay:", stay, "Solved:", solved, "----")
+			#for s in self.shapes:
+			#	print(f"**** shape id: {s.id}")
+			#	for c in s.cells:
+			#		print(f"({c.row}, {c.col}, {c.value}) -- {c.denied_values} ++ {c.allowed_values}")
+			#print("---- Loop", loops, "Stay:", stay, "Solved:", solved, "----")
 
 		if solved:
 			print("Puzzle solved in", loops, "loops!")
@@ -188,3 +188,71 @@ class Grid:
 				grid[cell.row - 1][cell.col - 1] = str(cell.value)
 		for row in grid:
 			print(" ".join(row))
+
+	def show_graphical(self):
+		rows = self.rows
+		cols = self.cols
+		# Create grid of values and shapes
+		grid = [[' ' for _ in range(cols)] for _ in range(rows)]
+		shape_grid = [[None for _ in range(cols)] for _ in range(rows)]
+		for cell in self.cells:
+			grid[cell.row - 1][cell.col - 1] = str(cell.value) if cell.value else ' '
+			for shape in self.shapes:
+				if cell in shape.cells:
+					shape_grid[cell.row - 1][cell.col - 1] = shape.id # pyright: ignore[reportArgumentType, reportCallIssue]
+					break
+		
+		# Top border
+		top = '┌' + '┬'.join('───' for _ in range(cols)) + '┐'
+		print(top)
+		
+		for r in range(rows):
+			# Row content
+			row_str = '│'
+			for c in range(cols):
+				val = grid[r][c]
+				row_str += f' {val} '
+				if c < cols - 1:
+					if shape_grid[r][c] == shape_grid[r][c+1]:
+						row_str += '·'
+					else:
+						row_str += '│'
+			row_str += '│'
+			print(row_str)
+			
+			# Horizontal line below, if not last
+			if r < rows - 1:
+				line = '├'
+				for c in range(cols):
+					if shape_grid[r][c] == shape_grid[r+1][c]:
+						line += ' - '
+					else:
+						line += '───'
+					if c < cols - 1:
+						# Junction
+						up_diff = shape_grid[r][c] != shape_grid[r][c+1]
+						down_diff = shape_grid[r+1][c] != shape_grid[r+1][c+1]
+						left_diff = shape_grid[r][c] != shape_grid[r+1][c]
+						right_diff = shape_grid[r][c+1] != shape_grid[r+1][c+1]
+						if not left_diff and not right_diff and not up_diff and not down_diff:
+							line += '┼'
+						elif not left_diff and not right_diff and not up_diff:
+							line += '┴'
+						elif not left_diff and not right_diff and not down_diff:
+							line += '┬'
+						elif not left_diff and not up_diff and not down_diff:
+							line += '┤'
+						elif not right_diff and not up_diff and not down_diff:
+							line += '├'
+						elif not left_diff and not right_diff:
+							line += '─'
+						elif not up_diff and not down_diff:
+							line += '│'
+						else:
+							line += ' '
+				line += '┤'
+				print(line)
+		
+		# Bottom border
+		bottom = '└' + '┴'.join('───' for _ in range(cols)) + '┘'
+		print(bottom)

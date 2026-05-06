@@ -6,12 +6,12 @@ This project aims to solve Suguru puzzles (also known as Tectonic).
 
 To define a puzzle, the following vocabulary is used:
 - grid: Represents the entire puzzle board.
-- form: Each grid is divided into different shapes (cages) containing one or more cells.
+- shape: Each grid is divided into different shapes (cages) containing one or more cells.
 - cell: An individual square within the grid.
 
 ### Grid Definition
 There are two ways to define a grid:
-- Defining the forms: Explicitly listing each shape and its constituent cells.
+- Defining the shapes: Explicitly listing each shape and its constituent cells.
 - Pseudo-graphical definition: Defining the grid layout using a visual-like text representation.
 
 In both cases, a cell is defined by its coordinates and its initial content.
@@ -48,7 +48,7 @@ d = {
 ```
 
 The grid is defined as a dict:
-- the key is the form name or index,
+- the key is the shape name or index,
 - the value is a tuple of 3 values:
   - the 2 first are the cell coordinate (row, column),
   - the last is the value: 0 or None if empty
@@ -65,7 +65,7 @@ d = [
 ```
 
 The grid is defined as a 2-dimentional list to represent the grid. Every cell in this definition is represented with a dict:
-- the key is the form index or name
+- the key is the shape index or name
 - the value is the cell value, 0 or None if empty
 
 ## Other grids
@@ -116,6 +116,17 @@ d= [
 	[{6: 0}, {7: 0}, {7: 0}, {11: 0}, {11: 0}, {12: 0}],
 	[{6: 0}, {7: 4}, {10: 0}, {10: 0}, {11: 0}, {12: 0}],
 	[{9: 0}, {7: 0}, {10: 0}, {11: 4}, {11: 0}, {11: 0}]
+]
+
+d = [
+[{0: 0}, {1: 0}, {1: 0}, {2: 0}, {3: 0}, {3: 0}, {4: 4}, {4: 0}],
+[{1: 0}, {1: 0}, {1: 0}, {2: 0}, {3: 0}, {3: 0}, {4: 2}, {4: 0}],
+[{5: 0}, {5: 3}, {2: 0}, {2: 4}, {3: 0}, {6: 0}, {7: 0}, {7: 0}],
+[{5: 0}, {5: 0}, {5: 0}, {2: 0}, {9: 0}, {6: 0}, {7: 0}, {7: 3}],
+[{8: 0}, {8: 3}, {9: 0}, {9: 0}, {9: 0}, {6: 0}, {6: 0}, {7: 0}],
+[{8: 0}, {8: 0}, {9: 0}, {10: 0}, {10: 0}, {11: 0}, {11: 0}, {12: 0}],
+[{8: 0}, {13: 0}, {10: 0}, {10: 0}, {10: 4}, {14: 0}, {14: 0}, {12: 0}],
+[{13: 0}, {13: 3}, {13: 5}, {13: 0}, {14: 0}, {14: 0}, {14: 3}, {12: 0}]
 ]
 ```
 
